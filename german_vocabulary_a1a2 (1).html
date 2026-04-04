@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Từ vựng Tiếng Đức A1-A2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+.app{max-width:600px;margin:0 auto;padding:12px}
+h1{font-size:17px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.topic-select{flex:1;min-width:0;padding:8px 10px;border:1px solid #d0d0d0;border-radius:10px;background:#fff;font-size:14px;color:#1a1a1a;-webkit-appearance:none;appearance:none}
+.mode-btns{display:flex;gap:4px;background:#e0e0e0;border-radius:10px;padding:3px}
+.mode-btn{padding:6px 14px;border:none;border-radius:8px;background:transparent;color:#555;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.15s}
+.mode-btn.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.12)}
+.legend{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#555}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot-der{background:#1a6bb5}
+.dot-die{background:#c0392b}
+.dot-das{background:#1e8449}
+
+/* Table */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+th{text-align:left;padding:9px 10px;border-bottom:1px solid #ebebeb;font-weight:600;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:0.3px}
+td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.tag-der{background:#ddeeff;color:#1a6bb5}
+.tag-die{background:#fde8e6;color:#c0392b}
+.tag-das{background:#d5f0de;color:#1e8449}
+.word-de{font-weight:600}
+.muted{color:#999;font-size:12px}
+
+/* Flashcard */
+.flashcard-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0}
+.flashcard{width:100%;max-width:420px;min-height:200px;border:1px solid #e0e0e0;border-radius:18px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2rem 1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);-webkit-tap-highlight-color:transparent;transition:transform 0.1s}
+.flashcard:active{transform:scale(0.98)}
+.card-hint{font-size:12px;color:#aaa;margin-bottom:10px}
+.card-word{font-size:32px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+.card-plural{font-size:13px;color:#999}
+.card-vi{font-size:18px;color:#555;margin-top:10px}
+.card-article{font-size:26px;font-weight:700;margin-top:10px}
+.fc-nav{display:flex;gap:10px;align-items:center}
+.fc-nav button{padding:10px 22px;border:1px solid #d0d0d0;border-radius:12px;background:#fff;color:#1a1a1a;cursor:pointer;font-size:14px;font-weight:500;-webkit-tap-highlight-color:transparent}
+.fc-nav button:active{background:#f0f0f0}
+.fc-counter{font-size:13px;color:#888;min-width:60px;text-align:center}
+.btn-shuffle{font-size:12px;padding:7px 16px;border:1px solid #d0d0d0;border-radius:10px;background:#fff;color:#888;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn-shuffle:active{background:#f0f0f0}
+
+/* Quiz */
+.quiz-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+.quiz-card{width:100%;max-width:440px;border:1px solid #e0e0e0;border-radius:18px;background:#fff;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.quiz-question{font-size:28px;font-weight:700;margin-bottom:6px;color:#1a1a1a}
+.quiz-vi{font-size:14px;color:#888;margin-bottom:1.5rem}
+.quiz-choices{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.quiz-choice{padding:12px 26px;border:1.5px solid #d0d0d0;border-radius:12px;cursor:pointer;font-size:18px;font-weight:700;background:#fff;color:#1a1a1a;-webkit-tap-highlight-color:transparent;transition:all 0.15s;min-width:70px}
+.quiz-choice:active:not(:disabled){transform:scale(0.96)}
+.quiz-choice.correct{background:#d5f0de;color:#1e8449;border-color:#1e8449}
+.quiz-choice.wrong{background:#fde8e6;color:#c0392b;border-color:#c0392b}
+.quiz-choice.reveal{background:#ddeeff;color:#1a6bb5;border-color:#1a6bb5}
+.quiz-choice:disabled{opacity:0.85}
+.quiz-feedback{font-size:14px;min-height:22px;color:#888;font-weight:500}
+.quiz-score{font-size:13px;color:#888;background:#fff;padding:6px 14px;border-radius:20px;border:1px solid #e0e0e0}
+.quiz-next{padding:10px 24px;border:1px solid #d0d0d0;border-radius:12px;background:#fff;color:#1a1a1a;cursor:pointer;font-size:14px;font-weight:500;margin-top:8px;-webkit-tap-highlight-color:transparent}
+.quiz-next:active{background:#f0f0f0}
+.result-card{text-align:center;padding:2rem}
+.result-score{font-size:48px;font-weight:700;color:#1a6bb5;margin:10px 0}
+.result-label{font-size:14px;color:#888;margin-bottom:1.5rem}
+
+@media(prefers-color-scheme:dark){
+  body{background:#1c1c1e;color:#f0f0f0}
+  h1{color:#f0f0f0}
+  .topic-select{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .mode-btns{background:#2c2c2e}
+  .mode-btn.active{background:#3a3a3c;color:#f0f0f0}
+  .mode-btn{color:#aaa}
+  .legend-item{color:#aaa}
+  .table-wrap{box-shadow:none}
+  table{background:#2c2c2e}
+  th{border-color:#3a3a3c;color:#888}
+  td{border-color:#333}
+  .word-de{color:#f0f0f0}
+  .tag-der{background:#1a3d5c;color:#7ab8e8}
+  .tag-die{background:#4a1c1c;color:#e88080}
+  .tag-das{background:#1a3d26;color:#7ad49a}
+  .muted{color:#777}
+  .flashcard{background:#2c2c2e;border-color:#444;box-shadow:none}
+  .card-word{color:#f0f0f0}
+  .card-vi{color:#aaa}
+  .fc-nav button,.btn-shuffle{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .quiz-card{background:#2c2c2e;border-color:#444;box-shadow:none}
+  .quiz-question{color:#f0f0f0}
+  .quiz-vi{color:#aaa}
+  .quiz-choice{background:#3a3a3c;border-color:#555;color:#f0f0f0}
+  .quiz-score{background:#2c2c2e;border-color:#444;color:#aaa}
+  .quiz-next{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .quiz-choice.correct{background:#1a3d26;color:#7ad49a;border-color:#7ad49a}
+  .quiz-choice.wrong{background:#4a1c1c;color:#e88080;border-color:#e88080}
+  .quiz-choice.reveal{background:#1a3d5c;color:#7ab8e8;border-color:#7ab8e8}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Từ vựng Tiếng Đức A1–A2</h1>
+<div class="controls">
+  <select class="topic-select" id="topicSel" onchange="onTopicChange()">
+    <option value="all">Tất cả chủ đề (300 từ)</option>
+    <option value="0">Gia đình & Con người</option>
+    <option value="1">Nhà cửa & Nội thất</option>
+    <option value="2">Đồ ăn & Thức uống</option>
+    <option value="3">Công việc & Văn phòng</option>
+    <option value="4">Thời gian rảnh & Sở thích</option>
+    <option value="5">Quần áo & Thời trang</option>
+    <option value="6">Cơ thể & Sức khỏe</option>
+    <option value="7">Giao thông & Du lịch</option>
+    <option value="8">Trường học & Học tập</option>
+    <option value="9">Thiên nhiên & Thời tiết</option>
+  </select>
+  <div class="mode-btns">
+    <button class="mode-btn active" id="btnList" onclick="setMode('list')">Bảng</button>
+    <button class="mode-btn" id="btnFlash" onclick="setMode('flash')">Flashcard</button>
+    <button class="mode-btn" id="btnQuiz" onclick="setMode('quiz')">Quiz</button>
+  </div>
+</div>
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-der"></div>der — xanh dương</div>
+  <div class="legend-item"><div class="dot dot-die"></div>die — đỏ</div>
+  <div class="legend-item"><div class="dot dot-das"></div>das — xanh lá</div>
+</div>
+<div id="content"></div>
+</div>
+
+<script>
+const topics=[
+  {name:"Gia đình & Con người",words:[
+    {a:"der",w:"Vater",p:"-ä-er",v:"Bố"},{a:"der",w:"Sohn",p:"-ö-e",v:"Con trai"},{a:"der",w:"Bruder",p:"-ü",v:"Anh/em trai"},{a:"der",w:"Opa",p:"-s",v:"Ông"},{a:"der",w:"Onkel",p:"-",v:"Chú/Bác"},{a:"der",w:"Cousin",p:"-s",v:"Anh em họ nam"},{a:"der",w:"Mann",p:"-ä-er",v:"Đàn ông"},{a:"der",w:"Freund",p:"-e",v:"Bạn nam"},{a:"der",w:"Nachbar",p:"-n",v:"Hàng xóm nam"},{a:"der",w:"Gast",p:"-ä-e",v:"Khách"},
+    {a:"die",w:"Mutter",p:"-ü-er",v:"Mẹ"},{a:"die",w:"Tochter",p:"-ö",v:"Con gái"},{a:"die",w:"Schwester",p:"-n",v:"Chị/em gái"},{a:"die",w:"Oma",p:"-s",v:"Bà"},{a:"die",w:"Tante",p:"-n",v:"Cô/Dì"},{a:"die",w:"Cousine",p:"-n",v:"Chị em họ nữ"},{a:"die",w:"Frau",p:"-en",v:"Phụ nữ"},{a:"die",w:"Freundin",p:"-nen",v:"Bạn nữ"},{a:"die",w:"Nachbarin",p:"-nen",v:"Hàng xóm nữ"},{a:"die",w:"Person",p:"-en",v:"Cá nhân"},
+    {a:"das",w:"Kind",p:"-er",v:"Đứa trẻ"},{a:"das",w:"Baby",p:"-s",v:"Trẻ sơ sinh"},{a:"das",w:"Mädchen",p:"-",v:"Cô bé"},{a:"das",w:"Mitglied",p:"-er",v:"Thành viên"},{a:"das",w:"Paar",p:"-e",v:"Cặp đôi"},{a:"das",w:"Enkelkind",p:"-er",v:"Cháu nội/ngoại"},{a:"das",w:"Vorbild",p:"-er",v:"Hình mẫu"},{a:"das",w:"Opfer",p:"-",v:"Nạn nhân"},{a:"das",w:"Gesicht",p:"-er",v:"Khuôn mặt"}
+  ]},
+  {name:"Nhà cửa & Nội thất",words:[
+    {a:"der",w:"Tisch",p:"-e",v:"Bàn"},{a:"der",w:"Stuhl",p:"-ü-e",v:"Ghế"},{a:"der",w:"Schrank",p:"-ä-e",v:"Tủ"},{a:"der",w:"Teppich",p:"-e",v:"Thảm"},{a:"der",w:"Balkon",p:"-s",v:"Ban công"},{a:"der",w:"Garten",p:"-ä",v:"Vườn"},{a:"der",w:"Flur",p:"-e",v:"Hành lang"},{a:"der",w:"Schlüssel",p:"-",v:"Chìa khóa"},{a:"der",w:"Fernseher",p:"-",v:"Tivi"},{a:"der",w:"Spiegel",p:"-",v:"Gương"},
+    {a:"die",w:"Küche",p:"-n",v:"Nhà bếp"},{a:"die",w:"Tür",p:"-en",v:"Cửa"},{a:"die",w:"Wand",p:"-ä-e",v:"Tường"},{a:"die",w:"Lampe",p:"-n",v:"Đèn"},{a:"die",w:"Wohnung",p:"-en",v:"Căn hộ"},{a:"die",w:"Treppe",p:"-n",v:"Cầu thang"},{a:"die",w:"Dusche",p:"-n",v:"Vòi sen"},{a:"die",w:"Miete",p:"-n",v:"Tiền thuê nhà"},{a:"die",w:"Waschmaschine",p:"-n",v:"Máy giặt"},{a:"die",w:"Heizung",p:"-en",v:"Lò sưởi"},
+    {a:"das",w:"Zimmer",p:"-",v:"Phòng"},{a:"das",w:"Haus",p:"-ä-er",v:"Nhà"},{a:"das",w:"Fenster",p:"-",v:"Cửa sổ"},{a:"das",w:"Bett",p:"-en",v:"Giường"},{a:"das",w:"Regal",p:"-e",v:"Kệ sách"},{a:"das",w:"Bad",p:"-ä-er",v:"Phòng tắm"},{a:"das",w:"Sofa",p:"-s",v:"Ghế sofa"},{a:"das",w:"Kissen",p:"-",v:"Gối"},{a:"das",w:"Gerät",p:"-e",v:"Thiết bị"},{a:"das",w:"Licht",p:"-er",v:"Ánh sáng"}
+  ]},
+  {name:"Đồ ăn & Thức uống",words:[
+    {a:"der",w:"Apfel",p:"-ä",v:"Táo"},{a:"der",w:"Käse",p:"-",v:"Phô mai"},{a:"der",w:"Fisch",p:"-e",v:"Cá"},{a:"der",w:"Reis",p:"kein Pl.",v:"Cơm"},{a:"der",w:"Tee",p:"-s",v:"Trà"},{a:"der",w:"Kaffee",p:"-s",v:"Cà phê"},{a:"der",w:"Saft",p:"-ä-e",v:"Nước ép"},{a:"der",w:"Kuchen",p:"-",v:"Bánh ngọt"},{a:"der",w:"Zucker",p:"-",v:"Đường"},{a:"der",w:"Pfeffer",p:"-",v:"Tiêu"},
+    {a:"die",w:"Banane",p:"-n",v:"Chuối"},{a:"die",w:"Milch",p:"kein Pl.",v:"Sữa"},{a:"die",w:"Suppe",p:"-n",v:"Súp"},{a:"die",w:"Kartoffel",p:"-n",v:"Khoai tây"},{a:"die",w:"Schokolade",p:"-n",v:"Sô cô la"},{a:"die",w:"Pizza",p:"-s",v:"Pizza"},{a:"die",w:"Wurst",p:"-ü-e",v:"Xúc xích"},{a:"die",w:"Limonade",p:"-n",v:"Nước ngọt"},{a:"die",w:"Tomate",p:"-n",v:"Cà chua"},{a:"die",w:"Zwiebel",p:"-n",v:"Hành tây"},
+    {a:"das",w:"Brot",p:"-e",v:"Bánh mì"},{a:"das",w:"Brötchen",p:"-",v:"Bánh mì nhỏ"},{a:"das",w:"Ei",p:"-er",v:"Trứng"},{a:"das",w:"Fleisch",p:"kein Pl.",v:"Thịt"},{a:"das",w:"Obst",p:"kein Pl.",v:"Trái cây"},{a:"das",w:"Gemüse",p:"-",v:"Rau củ"},{a:"das",w:"Wasser",p:"-",v:"Nước"},{a:"das",w:"Bier",p:"-e",v:"Bia"},{a:"das",w:"Salz",p:"-e",v:"Muối"},{a:"das",w:"Frühstück",p:"-e",v:"Bữa sáng"}
+  ]},
+  {name:"Công việc & Văn phòng",words:[
+    {a:"der",w:"Beruf",p:"-e",v:"Nghề nghiệp"},{a:"der",w:"Chef",p:"-s",v:"Sếp nam"},{a:"der",w:"Kollege",p:"-n",v:"Đồng nghiệp nam"},{a:"der",w:"Computer",p:"-",v:"Máy tính"},{a:"der",w:"Drucker",p:"-",v:"Máy in"},{a:"der",w:"Schreibtisch",p:"-e",v:"Bàn làm việc"},{a:"der",w:"Termin",p:"-e",v:"Cuộc hẹn"},{a:"der",w:"Job",p:"-s",v:"Việc làm"},{a:"der",w:"Vertrag",p:"-ä-e",v:"Hợp đồng"},{a:"der",w:"Erfolg",p:"-e",v:"Thành công"},
+    {a:"die",w:"Arbeit",p:"-en",v:"Công việc"},{a:"die",w:"Chefin",p:"-nen",v:"Sếp nữ"},{a:"die",w:"Kollegin",p:"-nen",v:"Đồng nghiệp nữ"},{a:"die",w:"Konferenz",p:"-en",v:"Hội nghị"},{a:"die",w:"Firma",p:"Firmen",v:"Công ty"},{a:"die",w:"E-Mail",p:"-s",v:"Thư điện tử"},{a:"die",w:"Pause",p:"-n",v:"Giờ nghỉ"},{a:"die",w:"Bewerbung",p:"-en",v:"Đơn xin việc"},{a:"die",w:"Steuer",p:"-n",v:"Thuế"},{a:"die",w:"Erfahrung",p:"-en",v:"Kinh nghiệm"},
+    {a:"das",w:"Büro",p:"-s",v:"Văn phòng"},{a:"das",w:"Telefon",p:"-e",v:"Điện thoại"},{a:"das",w:"Projekt",p:"-e",v:"Dự án"},{a:"das",w:"Gehalt",p:"-ä-er",v:"Lương"},{a:"das",w:"Werkzeug",p:"-e",v:"Công cụ"},{a:"das",w:"Praktikum",p:"..ka",v:"Thực tập"},{a:"das",w:"Zertifikat",p:"-e",v:"Chứng chỉ"},{a:"das",w:"Formular",p:"-e",v:"Biểu mẫu"},{a:"das",w:"Ding",p:"-e",v:"Vật/Thứ"},{a:"das",w:"Ziel",p:"-e",v:"Mục tiêu"}
+  ]},
+  {name:"Thời gian rảnh & Sở thích",words:[
+    {a:"der",w:"Sport",p:"-e",v:"Thể thao"},{a:"der",w:"Urlaub",p:"-e",v:"Kỳ nghỉ"},{a:"der",w:"Ausflug",p:"-ü-e",v:"Chuyến dã ngoại"},{a:"der",w:"Film",p:"-e",v:"Phim"},{a:"der",w:"Tanz",p:"-ä-e",v:"Điệu nhảy"},{a:"der",w:"Roman",p:"-e",v:"Tiểu thuyết"},{a:"der",w:"Park",p:"-s",v:"Công viên"},{a:"der",w:"Fußball",p:"-ä-e",v:"Bóng đá"},{a:"der",w:"Strand",p:"-ä-e",v:"Bãi biển"},{a:"der",w:"Wald",p:"-ä-er",v:"Rừng"},
+    {a:"die",w:"Freizeit",p:"kein Pl.",v:"Thời gian rảnh"},{a:"die",w:"Reise",p:"-n",v:"Chuyến đi"},{a:"die",w:"Musik",p:"kein Pl.",v:"Âm nhạc"},{a:"die",w:"Gitarre",p:"-n",v:"Đàn guitar"},{a:"die",w:"Kamera",p:"-s",v:"Máy ảnh"},{a:"die",w:"Wanderung",p:"-en",v:"Đi bộ đường dài"},{a:"die",w:"Natur",p:"kein Pl.",v:"Thiên nhiên"},{a:"die",w:"Malerei",p:"-en",v:"Hội họa"},{a:"die",w:"Disko",p:"-s",v:"Vũ trường"},{a:"die",w:"Party",p:"-s",v:"Bữa tiệc"},
+    {a:"das",w:"Hobby",p:"-s",v:"Sở thích"},{a:"das",w:"Kino",p:"-s",v:"Rạp phim"},{a:"das",w:"Konzert",p:"-e",v:"Buổi hòa nhạc"},{a:"das",w:"Theater",p:"-",v:"Nhà hát"},{a:"das",w:"Foto",p:"-s",v:"Ảnh"},{a:"das",w:"Spiel",p:"-e",v:"Trò chơi"},{a:"das",w:"Café",p:"-s",v:"Quán cà phê"},{a:"das",w:"Instrument",p:"-e",v:"Nhạc cụ"},{a:"das",w:"Restaurant",p:"-s",v:"Nhà hàng"},{a:"das",w:"Museum",p:"Museen",v:"Bảo tàng"}
+  ]},
+  {name:"Quần áo & Thời trang",words:[
+    {a:"der",w:"Mantel",p:"-ä",v:"Áo khoác dài"},{a:"der",w:"Rock",p:"-ö-e",v:"Chân váy"},{a:"der",w:"Pullover",p:"-",v:"Áo len"},{a:"der",w:"Schuh",p:"-e",v:"Giày"},{a:"der",w:"Hut",p:"-ü-e",v:"Mũ có vành"},{a:"der",w:"Anzug",p:"-ü-e",v:"Bộ comple"},{a:"der",w:"Gürtel",p:"-",v:"Thắt lưng"},{a:"der",w:"Stiefel",p:"-",v:"Ủng/Bốt"},{a:"der",w:"Schal",p:"-s",v:"Khăn quàng"},{a:"der",w:"Ring",p:"-e",v:"Nhẫn"},
+    {a:"die",w:"Hose",p:"-n",v:"Quần"},{a:"die",w:"Jacke",p:"-n",v:"Áo khoác ngắn"},{a:"die",w:"Bluse",p:"-n",v:"Áo sơ mi nữ"},{a:"die",w:"Mütze",p:"-n",v:"Mũ len"},{a:"die",w:"Tasche",p:"-n",v:"Túi xách"},{a:"die",w:"Brille",p:"-n",v:"Kính mắt"},{a:"die",w:"Krawatte",p:"-n",v:"Cà vạt"},{a:"die",w:"Socke",p:"-n",v:"Tất"},{a:"die",w:"Kleidung",p:"-en",v:"Quần áo"},{a:"die",w:"Mode",p:"-n",v:"Thời trang"},
+    {a:"das",w:"Kleid",p:"-er",v:"Váy liền"},{a:"das",w:"Hemd",p:"-en",v:"Áo sơ mi nam"},{a:"das",w:"T-Shirt",p:"-s",v:"Áo thun"},{a:"das",w:"Sakko",p:"-s",v:"Áo vest"},{a:"das",w:"Kostüm",p:"-e",v:"Bộ đồ nữ"},{a:"das",w:"Gold",p:"kein Pl.",v:"Vàng"},{a:"das",w:"Silber",p:"kein Pl.",v:"Bạc"},{a:"das",w:"Tuch",p:"-ü-er",v:"Khăn vải"},{a:"das",w:"Armband",p:"-ä-er",v:"Vòng tay"},{a:"das",w:"Leder",p:"-",v:"Da"}
+  ]},
+  {name:"Cơ thể & Sức khỏe",words:[
+    {a:"der",w:"Kopf",p:"-ö-e",v:"Đầu"},{a:"der",w:"Mund",p:"-ü-er",v:"Miệng"},{a:"der",w:"Arm",p:"-e",v:"Cánh tay"},{a:"der",w:"Finger",p:"-",v:"Ngón tay"},{a:"der",w:"Rücken",p:"-",v:"Lưng"},{a:"der",w:"Magen",p:"-ä",v:"Dạ dày"},{a:"der",w:"Bauch",p:"-ä-e",v:"Bụng"},{a:"der",w:"Arzt",p:"-ä-e",v:"Bác sĩ nam"},{a:"der",w:"Körper",p:"-",v:"Cơ thể"},{a:"der",w:"Schmerz",p:"-en",v:"Cơn đau"},
+    {a:"die",w:"Hand",p:"-ä-e",v:"Bàn tay"},{a:"die",w:"Nase",p:"-n",v:"Mũi"},{a:"die",w:"Haut",p:"-ä-e",v:"Da"},{a:"die",w:"Schulter",p:"-n",v:"Vai"},{a:"die",w:"Brust",p:"-ü-e",v:"Ngực"},{a:"die",w:"Grippe",p:"-n",v:"Cúm"},{a:"die",w:"Apotheke",p:"-n",v:"Tiệm thuốc"},{a:"die",w:"Ärztin",p:"-nen",v:"Bác sĩ nữ"},{a:"die",w:"Krankheit",p:"-en",v:"Bệnh tật"},{a:"die",w:"Medizin",p:"-en",v:"Y học"},
+    {a:"das",w:"Auge",p:"-n",v:"Mắt"},{a:"das",w:"Ohr",p:"-en",v:"Tai"},{a:"das",w:"Bein",p:"-e",v:"Chân"},{a:"das",w:"Haar",p:"-e",v:"Tóc"},{a:"das",w:"Herz",p:"-en",v:"Tim"},{a:"das",w:"Gesicht",p:"-er",v:"Mặt"},{a:"das",w:"Blut",p:"kein Pl.",v:"Máu"},{a:"das",w:"Krankenhaus",p:"-ä-er",v:"Bệnh viện"},{a:"das",w:"Medikament",p:"-e",v:"Thuốc"},{a:"das",w:"Rezept",p:"-e",v:"Đơn thuốc"}
+  ]},
+  {name:"Giao thông & Du lịch",words:[
+    {a:"der",w:"Zug",p:"-ü-e",v:"Tàu hỏa"},{a:"der",w:"Bus",p:"-se",v:"Xe buýt"},{a:"der",w:"Bahnhof",p:"-ö-e",v:"Nhà ga"},{a:"der",w:"Flughafen",p:"-ä",v:"Sân bay"},{a:"der",w:"Koffer",p:"-",v:"Va li"},{a:"der",w:"Pass",p:"-ä-se",v:"Hộ chiếu"},{a:"der",w:"Wagen",p:"-",v:"Xe ô tô"},{a:"der",w:"Verkehr",p:"kein Pl.",v:"Giao thông"},{a:"der",w:"Hubschrauber",p:"-",v:"Trực thăng"},{a:"der",w:"Fahrplan",p:"-ä-e",v:"Lịch trình"},
+    {a:"die",w:"Bahn",p:"-en",v:"Đường sắt"},{a:"die",w:"Station",p:"-en",v:"Trạm/Ga"},{a:"die",w:"Straße",p:"-n",v:"Con đường"},{a:"die",w:"U-Bahn",p:"-en",v:"Tàu điện ngầm"},{a:"die",w:"Karte",p:"-n",v:"Bản đồ/Thẻ"},{a:"die",w:"Tasche",p:"-n",v:"Túi xách"},{a:"die",w:"Ampel",p:"-n",v:"Đèn giao thông"},{a:"die",w:"Autobahn",p:"-en",v:"Đường cao tốc"},{a:"die",w:"Haltestelle",p:"-n",v:"Điểm dừng"},{a:"die",w:"Reise",p:"-n",v:"Chuyến du lịch"},
+    {a:"das",w:"Auto",p:"-s",v:"Xe hơi"},{a:"das",w:"Fahrrad",p:"-ä-er",v:"Xe đạp"},{a:"das",w:"Flugzeug",p:"-e",v:"Máy bay"},{a:"das",w:"Taxi",p:"-s",v:"Xe taxi"},{a:"das",w:"Ticket",p:"-s",v:"Vé"},{a:"das",w:"Schiff",p:"-e",v:"Tàu thủy"},{a:"das",w:"Boot",p:"-e",v:"Thuyền"},{a:"das",w:"Motorrad",p:"-ä-er",v:"Xe mô tô"},{a:"das",w:"Hotel",p:"-s",v:"Khách sạn"},{a:"das",w:"Benzin",p:"kein Pl.",v:"Xăng"}
+  ]},
+  {name:"Trường học & Học tập",words:[
+    {a:"der",w:"Lehrer",p:"-",v:"Thầy giáo"},{a:"der",w:"Schüler",p:"-",v:"Nam sinh"},{a:"der",w:"Kurs",p:"-e",v:"Khóa học"},{a:"der",w:"Student",p:"-en",v:"Nam sinh viên"},{a:"der",w:"Test",p:"-s",v:"Bài kiểm tra"},{a:"der",w:"Fehler",p:"-",v:"Lỗi sai"},{a:"der",w:"Stift",p:"-e",v:"Bút"},{a:"der",w:"Text",p:"-e",v:"Văn bản"},{a:"der",w:"Bleistift",p:"-e",v:"Bút chì"},{a:"der",w:"Unterricht",p:"kein Pl.",v:"Giờ học"},
+    {a:"die",w:"Lehrerin",p:"-nen",v:"Cô giáo"},{a:"die",w:"Schülerin",p:"-nen",v:"Nữ sinh"},{a:"die",w:"Schule",p:"-n",v:"Trường học"},{a:"die",w:"Studentin",p:"-nen",v:"Nữ sinh viên"},{a:"die",w:"Prüfung",p:"-en",v:"Kỳ thi"},{a:"die",w:"Klasse",p:"-n",v:"Lớp học"},{a:"die",w:"Übung",p:"-en",v:"Bài tập"},{a:"die",w:"Antwort",p:"-en",v:"Câu trả lời"},{a:"die",w:"Tafel",p:"-n",v:"Bảng"},{a:"die",w:"Universität",p:"-en",v:"Đại học"},
+    {a:"das",w:"Buch",p:"-ü-er",v:"Sách"},{a:"das",w:"Heft",p:"-e",v:"Vở"},{a:"das",w:"Fach",p:"-ä-er",v:"Môn học"},{a:"das",w:"Studium",p:"..dien",v:"Việc học ĐH"},{a:"das",w:"Diplom",p:"-e",v:"Bằng cấp"},{a:"das",w:"Semester",p:"-",v:"Học kỳ"},{a:"das",w:"Wort",p:"-ö-er",v:"Từ vựng"},{a:"das",w:"Beispiel",p:"-e",v:"Ví dụ"},{a:"das",w:"Klassenzimmer",p:"-",v:"Phòng học"},{a:"das",w:"Ergebnis",p:"-se",v:"Kết quả"}
+  ]},
+  {name:"Thiên nhiên & Thời tiết",words:[
+    {a:"der",w:"Baum",p:"-ä-e",v:"Cây"},{a:"der",w:"Berg",p:"-e",v:"Núi"},{a:"der",w:"See",p:"-n",v:"Hồ"},{a:"der",w:"Fluss",p:"-ü-se",v:"Sông"},{a:"der",w:"Regen",p:"kein Pl.",v:"Mưa"},{a:"der",w:"Wind",p:"-e",v:"Gió"},{a:"der",w:"Mond",p:"-e",v:"Mặt trăng"},{a:"der",w:"Himmel",p:"-",v:"Bầu trời"},{a:"der",w:"Stern",p:"-e",v:"Ngôi sao"},{a:"der",w:"Wald",p:"-ä-er",v:"Rừng"},
+    {a:"die",w:"Sonne",p:"-n",v:"Mặt trời"},{a:"die",w:"Erde",p:"-n",v:"Trái đất"},{a:"die",w:"Blume",p:"-n",v:"Hoa"},{a:"die",w:"Luft",p:"kein Pl.",v:"Không khí"},{a:"die",w:"Wolke",p:"-n",v:"Mây"},{a:"die",w:"Welt",p:"-en",v:"Thế giới"},{a:"die",w:"Insel",p:"-n",v:"Đảo"},{a:"die",w:"Pflanze",p:"-n",v:"Thực vật"},{a:"die",w:"Umwelt",p:"kein Pl.",v:"Môi trường"},{a:"die",w:"Wüste",p:"-n",v:"Sa mạc"},
+    {a:"das",w:"Wasser",p:"-",v:"Nước"},{a:"das",w:"Wetter",p:"kein Pl.",v:"Thời tiết"},{a:"das",w:"Meer",p:"-e",v:"Biển"},{a:"das",w:"Land",p:"-ä-er",v:"Quốc gia"},{a:"das",w:"Feuer",p:"-",v:"Lửa"},{a:"das",w:"Eis",p:"kein Pl.",v:"Băng/Kem"},{a:"das",w:"Gras",p:"-ä-er",v:"Cỏ"},{a:"das",w:"Tier",p:"-e",v:"Động vật"},{a:"das",w:"Klima",p:"-s",v:"Khí hậu"},{a:"das",w:"Feld",p:"-er",v:"Cánh đồng"}
+  ]}
+];
+
+let mode='list',fcIdx=0,fcRevealed=false,fcWords=[],quizWords=[],quizIdx=0,quizScore=0,quizAnswered=false;
+
+function getWords(){
+  const sel=document.getElementById('topicSel').value;
+  if(sel==='all') return topics.flatMap(t=>t.words);
+  return topics[parseInt(sel)].words;
+}
+
+function onTopicChange(){
+  if(mode==='flash'){fcWords=shuffle([...getWords()]);fcIdx=0;fcRevealed=false;}
+  if(mode==='quiz'){quizWords=shuffle([...getWords()]);quizIdx=0;quizScore=0;quizAnswered=false;}
+  render();
+}
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn'+m.charAt(0).toUpperCase()+m.slice(1)).classList.add('active');
+  if(m==='flash'){fcWords=shuffle([...getWords()]);fcIdx=0;fcRevealed=false;}
+  if(m==='quiz'){quizWords=shuffle([...getWords()]);quizIdx=0;quizScore=0;quizAnswered=false;}
+  render();
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function articleColor(a){return a==='der'?'#1a6bb5':a==='die'?'#c0392b':'#1e8449';}
+
+function render(){
+  const el=document.getElementById('content');
+  if(mode==='list') renderList(el);
+  else if(mode==='flash') renderFlash(el);
+  else renderQuiz(el);
+}
+
+function renderList(el){
+  const words=getWords();
+  let html='<div class="table-wrap"><table><tr><th>Mạo từ</th><th>Từ tiếng Đức</th><th>Số nhiều</th><th>Nghĩa</th></tr>';
+  words.forEach(w=>{
+    html+=`<tr><td><span class="tag tag-${w.a}">${w.a}</span></td><td class="word-de" style="color:${articleColor(w.a)}">${w.w}</td><td class="muted">${w.p}</td><td>${w.v}</td></tr>`;
+  });
+  html+='</table></div>';
+  el.innerHTML=html;
+}
+
+function renderFlash(el){
+  if(!fcWords.length){fcWords=shuffle([...getWords()]);}
+  const w=fcWords[fcIdx];
+  const color=articleColor(w.a);
+  el.innerHTML=`<div class="flashcard-wrap">
+    <div class="flashcard" onclick="toggleFlash()">
+      <div class="card-hint">${fcRevealed?'Nhấn để lật lại':'Nhấn để xem mạo từ & nghĩa'}</div>
+      <div class="card-word">${w.w}</div>
+      <div class="card-plural muted">(${w.p})</div>
+      ${fcRevealed?`<div class="card-article" style="color:${color}">${w.a}</div><div class="card-vi">${w.v}</div>`:''}
+    </div>
+    <div class="fc-nav">
+      <button onclick="fcNav(-1)">← Trước</button>
+      <span class="fc-counter">${fcIdx+1} / ${fcWords.length}</span>
+      <button onclick="fcNav(1)">Tiếp →</button>
+    </div>
+    <button class="btn-shuffle" onclick="fcWords=shuffle([...getWords()]);fcIdx=0;fcRevealed=false;render();">Xáo bài</button>
+  </div>`;
+}
+
+function toggleFlash(){fcRevealed=!fcRevealed;renderFlash(document.getElementById('content'));}
+function fcNav(d){fcIdx=(fcIdx+d+fcWords.length)%fcWords.length;fcRevealed=false;renderFlash(document.getElementById('content'));}
+
+function renderQuiz(el){
+  if(!quizWords.length){quizWords=shuffle([...getWords()]);quizIdx=0;quizScore=0;}
+  if(quizIdx>=quizWords.length){
+    el.innerHTML=`<div class="quiz-wrap"><div class="quiz-card"><div class="result-card">
+      <div style="font-size:15px;color:#888;margin-bottom:6px">Kết quả</div>
+      <div class="result-score">${quizScore}/${quizWords.length}</div>
+      <div class="result-label">${Math.round(quizScore/quizWords.length*100)}% đúng</div>
+      <button class="quiz-next" onclick="quizWords=shuffle([...getWords()]);quizIdx=0;quizScore=0;quizAnswered=false;render();">Chơi lại</button>
+    </div></div></div>`;
+    return;
+  }
+  const w=quizWords[quizIdx];
+  el.innerHTML=`<div class="quiz-wrap">
+    <div class="quiz-score">Điểm: ${quizScore} · Câu ${quizIdx+1}/${quizWords.length}</div>
+    <div class="quiz-card">
+      <div class="quiz-question">${w.w}</div>
+      <div class="quiz-vi">${w.v} · (${w.p})</div>
+      <div class="quiz-choices">
+        <button class="quiz-choice" id="qc-der" onclick="answerQuiz('der')">der</button>
+        <button class="quiz-choice" id="qc-die" onclick="answerQuiz('die')">die</button>
+        <button class="quiz-choice" id="qc-das" onclick="answerQuiz('das')">das</button>
+      </div>
+      <div class="quiz-feedback" id="qfeedback"></div>
+      <button class="quiz-next" id="qnext" style="display:none" onclick="quizIdx++;quizAnswered=false;render();">Tiếp →</button>
+    </div>
+  </div>`;
+}
+
+function answerQuiz(choice){
+  if(quizAnswered)return;
+  quizAnswered=true;
+  const correct=quizWords[quizIdx].a;
+  const fb=document.getElementById('qfeedback');
+  ['der','die','das'].forEach(c=>{
+    const btn=document.getElementById('qc-'+c);
+    btn.disabled=true;
+    if(c===correct) btn.classList.add('reveal');
+  });
+  if(choice===correct){
+    document.getElementById('qc-'+choice).classList.remove('reveal');
+    document.getElementById('qc-'+choice).classList.add('correct');
+    fb.textContent='Đúng rồi!';fb.style.color='#1e8449';
+    quizScore++;
+  } else {
+    document.getElementById('qc-'+choice).classList.add('wrong');
+    fb.textContent='Sai. Đáp án: '+correct;fb.style.color='#c0392b';
+  }
+  document.getElementById('qnext').style.display='inline-block';
+}
+
+render();
+</script>
+</body>
+</html>
