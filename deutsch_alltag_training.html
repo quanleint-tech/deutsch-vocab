@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tiếng Đức hàng ngày — Hội thoại thực tế</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+.wrap{max-width:600px;margin:0 auto;padding:12px}
+h1{font-size:17px;font-weight:600;margin-bottom:12px}
+.top-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+select{flex:1;min-width:0;padding:8px 10px;border:1px solid #d0d0d0;border-radius:10px;background:#fff;font-size:14px;color:#1a1a1a;-webkit-appearance:none}
+.mode-btns{display:flex;gap:3px;background:#e0e0e0;border-radius:10px;padding:3px}
+.mbtn{padding:6px 14px;border:none;border-radius:8px;background:transparent;color:#666;cursor:pointer;font-size:13px;font-weight:500}
+.mbtn.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.12)}
+
+.dialog-card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1rem 1.1rem;margin-bottom:12px}
+.dialog-title{font-size:12px;font-weight:600;color:#888;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:0.4px}
+.line{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.line:last-child{margin-bottom:0}
+.speaker{font-size:11px;font-weight:700;min-width:22px;padding-top:3px}
+.speaker.a{color:#185FA5}
+.speaker.b{color:#3B6D11}
+.bubble{flex:1}
+.de{font-size:14px;color:#1a1a1a;line-height:1.6}
+.vi{font-size:12px;color:#888;margin-top:2px}
+
+.blank{display:inline-block;background:#f0f0f0;border:1px solid #d0d0d0;border-radius:6px;min-width:80px;padding:1px 8px;font-size:14px;color:#1a1a1a;vertical-align:middle;cursor:text;outline:none;-webkit-user-modify:read-write-plaintext-only}
+.blank:focus{border-color:#888;background:#fff}
+.blank.correct{background:#d5f0de;border-color:#3B6D11;color:#3B6D11}
+.blank.wrong{background:#fde8e6;border-color:#c0392b;color:#c0392b}
+.blank.revealed{background:#ddeeff;border-color:#185FA5;color:#185FA5}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn{padding:9px 18px;border:1px solid #d0d0d0;border-radius:10px;background:#fff;color:#1a1a1a;cursor:pointer;font-size:13px;font-weight:500;-webkit-tap-highlight-color:transparent}
+.btn:active{background:#f0f0f0}
+.btn.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn.primary:active{background:#333}
+
+.tip-box{background:#fffbea;border:1px solid #f0d060;border-radius:10px;padding:10px 14px;font-size:13px;color:#7a5f00;line-height:1.5}
+.tip-label{font-weight:600;margin-bottom:3px}
+
+.score-bar{display:flex;gap:8px;margin-bottom:12px}
+.score-pill{background:#fff;border:1px solid #e8e8e8;border-radius:20px;padding:5px 12px;font-size:13px;color:#888}
+.score-pill span{font-weight:600;color:#1a1a1a}
+
+.quiz-card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1.1rem;margin-bottom:12px}
+.quiz-q{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;line-height:1.4}
+.quiz-ctx{font-size:12px;color:#888;margin-bottom:14px}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.qopt{padding:11px 14px;border:1px solid #d8d8d8;border-radius:10px;cursor:pointer;font-size:14px;background:#fff;color:#1a1a1a;text-align:left;-webkit-tap-highlight-color:transparent}
+.qopt:active:not(:disabled){background:#f5f5f5}
+.qopt.correct{background:#d5f0de;border-color:#3B6D11;color:#27500A}
+.qopt.wrong{background:#fde8e6;border-color:#c0392b;color:#791F1F}
+.qopt.reveal{background:#ddeeff;border-color:#185FA5;color:#0C447C}
+.qopt:disabled{opacity:0.9}
+.qfb{font-size:13px;min-height:18px;margin-top:10px;font-weight:500}
+
+.result-card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:2rem 1rem;text-align:center;margin-bottom:12px}
+.result-num{font-size:52px;font-weight:700;color:#1a1a1a}
+.result-pct{font-size:14px;color:#888;margin-top:4px;margin-bottom:1.5rem}
+
+@media(prefers-color-scheme:dark){
+  body{background:#1c1c1e;color:#f0f0f0}
+  h1{color:#f0f0f0}
+  select{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .mode-btns{background:#2c2c2e}
+  .mbtn.active{background:#3a3a3c;color:#f0f0f0}
+  .mbtn{color:#aaa}
+  .dialog-card,.quiz-card,.result-card{background:#2c2c2e;border-color:#3a3a3c}
+  .dialog-title{border-color:#3a3a3c;color:#777}
+  .de{color:#f0f0f0}
+  .vi{color:#888}
+  .blank{background:#3a3a3c;border-color:#555;color:#f0f0f0}
+  .blank:focus{background:#444;border-color:#888}
+  .blank.correct{background:#1a3d26;border-color:#7ad49a;color:#7ad49a}
+  .blank.wrong{background:#4a1c1c;border-color:#e88080;color:#e88080}
+  .blank.revealed{background:#1a3d5c;border-color:#7ab8e8;color:#7ab8e8}
+  .btn{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .btn:active{background:#3a3a3c}
+  .btn.primary{background:#f0f0f0;color:#1a1a1a}
+  .tip-box{background:#2c2400;border-color:#7a6000;color:#f0c040}
+  .score-pill{background:#2c2c2e;border-color:#3a3a3c;color:#aaa}
+  .score-pill span{color:#f0f0f0}
+  .qopt{background:#2c2c2e;border-color:#444;color:#f0f0f0}
+  .qopt:active:not(:disabled){background:#3a3a3c}
+  .qopt.correct{background:#1a3d26;border-color:#7ad49a;color:#7ad49a}
+  .qopt.wrong{background:#4a1c1c;border-color:#e88080;color:#e88080}
+  .qopt.reveal{background:#1a3d5c;border-color:#7ab8e8;color:#7ab8e8}
+  .result-num{color:#f0f0f0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Tiếng Đức hàng ngày</h1>
+<div class="top-bar">
+  <select id="sitSel" onchange="onSitChange()">
+    <option value="0">Siêu thị — Einkaufen</option>
+    <option value="1">Hàng xóm — Nachbarn</option>
+    <option value="2">Giao thông — Öffentliche Verkehrsmittel</option>
+    <option value="3">Bác sĩ — Arzttermin</option>
+    <option value="4">Nhà hàng — Im Restaurant</option>
+  </select>
+  <div class="mode-btns">
+    <button class="mbtn active" id="mFill" onclick="setMode('fill')">Điền từ</button>
+    <button class="mbtn" id="mQuiz" onclick="setMode('quiz')">Quiz</button>
+  </div>
+</div>
+<div id="content"></div>
+</div>
+
+<script>
+const data=[
+  {
+    title:"Siêu thị — Einkaufen",
+    tip:"Trong siêu thị Đức, dùng 'Entschuldigung' để hỏi đường hoặc xin lỗi. Nhớ mang túi riêng vì túi nilon thường mất phí.",
+    dialog:[
+      {s:"A",de:"Entschuldigung, wo finde ich die Milch?",vi:"Xin lỗi, tôi tìm sữa ở đâu?"},
+      {s:"B",de:"Die Milch ist in Gang drei, auf der rechten Seite.",vi:"Sữa ở lối đi số ba, phía bên phải."},
+      {s:"A",de:"Vielen Dank! Und haben Sie auch Tofu?",vi:"Cảm ơn rất nhiều! Và các bạn có đậu phụ không?"},
+      {s:"B",de:"Ja, Tofu finden Sie im Kühlregal, neben dem Käse.",vi:"Có, đậu phụ ở tủ lạnh, bên cạnh phô mai."},
+      {s:"A",de:"Perfekt. Wo ist die Kasse, bitte?",vi:"Tuyệt. Quầy thu ngân ở đâu ạ?"},
+      {s:"B",de:"Die Kasse ist vorne rechts, gleich am Eingang.",vi:"Quầy thu ngân ở phía trước bên phải, ngay cạnh lối vào."}
+    ],
+    blanks:[
+      {line:0,word:"finde",hint:"tìm (động từ)"},
+      {line:1,word:"rechten",hint:"bên phải (tính từ)"},
+      {line:2,word:"haben",hint:"có (động từ)"},
+      {line:3,word:"neben",hint:"bên cạnh (giới từ)"},
+      {line:4,word:"Kasse",hint:"quầy thu ngân"},
+      {line:5,word:"Eingang",hint:"lối vào"}
+    ],
+    quiz:[
+      {q:"Wie sagt man 'Xin lỗi' auf Deutsch?",ctx:"Khi muốn hỏi đường trong siêu thị",opts:["Entschuldigung","Danke","Bitte","Hallo"],ans:0},
+      {q:"Was bedeutet 'Kühlregal'?",ctx:"Nơi để thực phẩm cần bảo quản lạnh",opts:["Kệ bánh mì","Tủ lạnh/kệ đông lạnh","Quầy thu ngân","Lối ra"],ans:1},
+      {q:"Wie fragt man nach dem Weg?",ctx:"Hỏi đường một cách lịch sự",opts:["Wo ist die Kasse?","Ich möchte bezahlen.","Haben Sie Tofu?","Auf Wiedersehen!"],ans:0},
+      {q:"Was bedeutet 'auf der rechten Seite'?",ctx:"Chỉ hướng trong siêu thị",opts:["Phía trên","Phía bên trái","Phía bên phải","Phía sau"],ans:2},
+      {q:"Welches Wort fehlt? 'Die Milch ist in Gang ___, auf der rechten Seite.'",ctx:"Số thứ tự lối đi",opts:["zwei","drei","vier","fünf"],ans:1}
+    ]
+  },
+  {
+    title:"Hàng xóm — Nachbarn",
+    tip:"Người Đức rất coi trọng 'Ruhezeiten' (giờ yên tĩnh): thường từ 22:00–6:00 và cả ngày Chủ nhật. Vi phạm có thể bị phàn nàn.",
+    dialog:[
+      {s:"A",de:"Guten Morgen! Ich bin Ihre neue Nachbarin.",vi:"Chào buổi sáng! Tôi là hàng xóm mới của bạn."},
+      {s:"B",de:"Oh, herzlich willkommen! Woher kommen Sie?",vi:"Ồ, chào mừng! Bạn đến từ đâu?"},
+      {s:"A",de:"Ich komme aus Vietnam. Ich heiße Lan.",vi:"Tôi đến từ Việt Nam. Tôi tên là Lan."},
+      {s:"B",de:"Schön, Sie kennenzulernen! Ich heiße Klaus.",vi:"Rất vui được gặp bạn! Tôi tên là Klaus."},
+      {s:"A",de:"Entschuldigung, gibt es hier eine Waschküche?",vi:"Xin lỗi, ở đây có phòng giặt chung không?"},
+      {s:"B",de:"Ja, im Keller. Die Schlüssel holen Sie beim Hausmeister.",vi:"Có, ở tầng hầm. Chìa khóa lấy ở bác quản lý nhà."}
+    ],
+    blanks:[
+      {line:0,word:"Nachbarin",hint:"hàng xóm nữ"},
+      {line:1,word:"Woher",hint:"từ đâu"},
+      {line:2,word:"heiße",hint:"tên là (động từ)"},
+      {line:3,word:"kennenzulernen",hint:"được gặp/quen biết"},
+      {line:4,word:"gibt",hint:"có (es gibt = có)"},
+      {line:5,word:"Keller",hint:"tầng hầm"}
+    ],
+    quiz:[
+      {q:"Wie stellt man sich vor?",ctx:"Giới thiệu bản thân với hàng xóm",opts:["Ich heiße Lan.","Ich möchte schlafen.","Wo ist die Küche?","Auf Wiedersehen!"],ans:0},
+      {q:"Was bedeutet 'Hausmeister'?",ctx:"Người quản lý tòa nhà",opts:["Hàng xóm","Chủ nhà","Quản lý/bảo vệ nhà","Khách thuê"],ans:2},
+      {q:"Wie fragt man nach einer Gemeinschaftseinrichtung?",ctx:"Hỏi về tiện ích chung trong tòa nhà",opts:["Gibt es hier eine Waschküche?","Ich kaufe ein Haus.","Wo wohnen Sie?","Haben Sie Kinder?"],ans:0},
+      {q:"Was ist die 'Ruhezeit' in Deutschland?",ctx:"Quy tắc quan trọng khi sống ở Đức",opts:["Giờ ăn trưa","Giờ yên tĩnh bắt buộc","Giờ làm việc","Giờ tập thể dục"],ans:1},
+      {q:"Welches Wort fehlt? 'Ich komme ___ Vietnam.'",ctx:"Nói về quê hương của mình",opts:["nach","in","aus","von"],ans:2}
+    ]
+  },
+  {
+    title:"Giao thông — Öffentliche Verkehrsmittel",
+    tip:"Ở Đức mua vé trước khi lên tàu/xe buýt. Nếu bị kiểm tra mà không có vé sẽ bị phạt 60€ (Schwarzfahren).",
+    dialog:[
+      {s:"A",de:"Entschuldigung, fährt dieser Bus zum Hauptbahnhof?",vi:"Xin lỗi, xe buýt này có đến ga trung tâm không?"},
+      {s:"B",de:"Nein, Sie müssen die Linie 12 nehmen.",vi:"Không, bạn phải đi tuyến số 12."},
+      {s:"A",de:"Wo ist die Haltestelle für Linie 12?",vi:"Trạm dừng của tuyến 12 ở đâu?"},
+      {s:"B",de:"Gehen Sie geradeaus, dann links. Es sind etwa fünf Minuten.",vi:"Đi thẳng, sau đó rẽ trái. Khoảng năm phút."},
+      {s:"A",de:"Brauche ich ein Ticket kaufen?",vi:"Tôi có cần mua vé không?"},
+      {s:"B",de:"Ja, am Automaten oder in der App. Ohne Ticket ist es verboten.",vi:"Có, ở máy bán vé hoặc qua app. Không có vé là vi phạm."}
+    ],
+    blanks:[
+      {line:0,word:"fährt",hint:"đi/chạy (phương tiện)"},
+      {line:1,word:"müssen",hint:"phải (động từ khuyết thiếu)"},
+      {line:2,word:"Haltestelle",hint:"trạm dừng"},
+      {line:3,word:"geradeaus",hint:"đi thẳng"},
+      {line:4,word:"kaufen",hint:"mua"},
+      {line:5,word:"verboten",hint:"bị cấm"}
+    ],
+    quiz:[
+      {q:"Was bedeutet 'Schwarzfahren'?",ctx:"Đi tàu/xe buýt ở Đức",opts:["Đi xe ban đêm","Đi xe không có vé","Đi xe màu đen","Đi xe miễn phí"],ans:1},
+      {q:"Wie fragt man nach der richtigen Linie?",ctx:"Hỏi xem có đúng tuyến không",opts:["Fährt dieser Bus zum Hauptbahnhof?","Ich möchte schlafen.","Wo kaufe ich Essen?","Wie viel kostet das?"],ans:0},
+      {q:"Was bedeutet 'geradeaus'?",ctx:"Chỉ đường",opts:["Rẽ phải","Rẽ trái","Đi thẳng","Quay lại"],ans:2},
+      {q:"Wo kann man ein Ticket kaufen?",ctx:"Mua vé phương tiện công cộng",opts:["Nur im Bus","Am Automaten oder in der App","Beim Fahrer","Nur online"],ans:1},
+      {q:"Welches Wort fehlt? 'Sie ___ die Linie 12 nehmen.'",ctx:"Diễn đạt sự bắt buộc",opts:["können","wollen","müssen","dürfen"],ans:2}
+    ]
+  },
+  {
+    title:"Bác sĩ — Arzttermin",
+    tip:"Ở Đức cần đặt hẹn trước (Termin vereinbaren). Mang theo thẻ bảo hiểm y tế (Krankenversicherungskarte) mỗi lần đi khám.",
+    dialog:[
+      {s:"A",de:"Guten Tag, ich möchte einen Termin vereinbaren.",vi:"Chào, tôi muốn đặt lịch hẹn."},
+      {s:"B",de:"Natürlich. Was fehlt Ihnen?",vi:"Được thôi. Bạn bị sao vậy?"},
+      {s:"A",de:"Ich habe Kopfschmerzen und Fieber seit zwei Tagen.",vi:"Tôi bị đau đầu và sốt được hai ngày rồi."},
+      {s:"B",de:"Haben Sie Ihre Krankenversicherungskarte dabei?",vi:"Bạn có mang theo thẻ bảo hiểm y tế không?"},
+      {s:"A",de:"Ja, hier ist meine Karte.",vi:"Có, đây là thẻ của tôi."},
+      {s:"B",de:"Gut. Können Sie morgen um zehn Uhr kommen?",vi:"Tốt. Bạn có thể đến lúc mười giờ sáng mai không?"}
+    ],
+    blanks:[
+      {line:0,word:"vereinbaren",hint:"đặt/thỏa thuận"},
+      {line:1,word:"fehlt",hint:"thiếu/bị sao (es fehlt = bị gì đó)"},
+      {line:2,word:"Fieber",hint:"sốt"},
+      {line:3,word:"Krankenversicherungskarte",hint:"thẻ bảo hiểm y tế"},
+      {line:4,word:"hier",hint:"đây"},
+      {line:5,word:"morgen",hint:"ngày mai"}
+    ],
+    quiz:[
+      {q:"Wie vereinbart man einen Arzttermin?",ctx:"Đặt lịch hẹn bác sĩ",opts:["Ich möchte einen Termin vereinbaren.","Ich kaufe Medikamente.","Wo ist das Krankenhaus?","Ich habe Hunger."],ans:0},
+      {q:"Was fragt der Arzt zuerst?",ctx:"Câu hỏi đầu tiên của bác sĩ/lễ tân",opts:["Wie heißen Sie?","Was fehlt Ihnen?","Wo wohnen Sie?","Wie alt sind Sie?"],ans:1},
+      {q:"Was bedeutet 'Fieber haben'?",ctx:"Triệu chứng bệnh",opts:["Bị đau họng","Bị sốt","Bị đau bụng","Bị ho"],ans:1},
+      {q:"Was muss man zum Arzt mitbringen?",ctx:"Giấy tờ cần mang theo",opts:["Reisepass","Führerschein","Krankenversicherungskarte","Arbeitsvertrag"],ans:2},
+      {q:"Wie sagt man 'ngày mai' auf Deutsch?",ctx:"Hẹn ngày khám",opts:["heute","gestern","morgen","nächste Woche"],ans:2}
+    ]
+  },
+  {
+    title:"Nhà hàng — Im Restaurant",
+    tip:"Tiền boa (Trinkgeld) không bắt buộc nhưng thường để lại 5-10%. Nói 'Stimmt so' nghĩa là không cần thối lại tiền.",
+    dialog:[
+      {s:"A",de:"Einen Tisch für zwei Personen, bitte.",vi:"Cho một bàn cho hai người, làm ơn."},
+      {s:"B",de:"Natürlich, bitte hier entlang.",vi:"Được thôi, mời đi lối này."},
+      {s:"A",de:"Was empfehlen Sie heute?",vi:"Hôm nay bạn gợi ý món gì?"},
+      {s:"B",de:"Das Schnitzel ist sehr gut. Und zu trinken?",vi:"Món Schnitzel rất ngon. Và uống gì ạ?"},
+      {s:"A",de:"Ein Wasser und ein Bier, bitte.",vi:"Một nước và một bia, làm ơn."},
+      {s:"B",de:"Sehr gerne. Zahlen Sie zusammen oder getrennt?",vi:"Vâng ạ. Thanh toán chung hay tách ra?"}
+    ],
+    blanks:[
+      {line:0,word:"Personen",hint:"người (số nhiều)"},
+      {line:1,word:"entlang",hint:"dọc theo/lối này"},
+      {line:2,word:"empfehlen",hint:"gợi ý/đề nghị"},
+      {line:3,word:"gut",hint:"ngon/tốt"},
+      {line:4,word:"Wasser",hint:"nước"},
+      {line:5,word:"getrennt",hint:"tách riêng"}
+    ],
+    quiz:[
+      {q:"Wie bestellt man einen Tisch?",ctx:"Đặt bàn tại nhà hàng",opts:["Einen Tisch für zwei Personen, bitte.","Ich möchte die Rechnung.","Was kostet das?","Ich bin satt."],ans:0},
+      {q:"Was bedeutet 'Stimmt so'?",ctx:"Khi trả tiền ở nhà hàng Đức",opts:["Tổng cộng bao nhiêu?","Không cần thối lại","Tôi muốn chia bill","Tôi trả bằng thẻ"],ans:1},
+      {q:"Wie fragt man nach einer Empfehlung?",ctx:"Hỏi gợi ý món ăn",opts:["Was empfehlen Sie?","Wo ist die Toilette?","Ich möchte zahlen.","Haben Sie Tofu?"],ans:0},
+      {q:"Was bedeutet 'getrennt zahlen'?",ctx:"Thanh toán tại nhà hàng",opts:["Trả chung một lần","Trả bằng tiền mặt","Trả riêng từng người","Trả bằng thẻ"],ans:2},
+      {q:"Wie viel Trinkgeld gibt man in Deutschland?",ctx:"Văn hóa tiền boa ở Đức",opts:["Không bao giờ","5-10%","20-30%","Bắt buộc 15%"],ans:1}
+    ]
+  }
+];
+
+let mode='fill',sitIdx=0,fillChecked=false,quizIdx=0,quizScore=0,quizAnswered=false,quizDone=false;
+
+function onSitChange(){
+  sitIdx=parseInt(document.getElementById('sitSel').value);
+  fillChecked=false;quizIdx=0;quizScore=0;quizAnswered=false;quizDone=false;
+  render();
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mFill').classList.toggle('active',m==='fill');
+  document.getElementById('mQuiz').classList.toggle('active',m==='quiz');
+  fillChecked=false;quizIdx=0;quizScore=0;quizAnswered=false;quizDone=false;
+  render();
+}
+
+function render(){
+  const el=document.getElementById('content');
+  mode==='fill'?renderFill(el):renderQuiz(el);
+}
+
+function renderFill(el){
+  const d=data[sitIdx];
+  const blankMap={};
+  d.blanks.forEach((b,i)=>blankMap[b.line]=i);
+  let html=`<div class="dialog-card"><div class="dialog-title">${d.title}</div>`;
+  d.dialog.forEach((l,i)=>{
+    let de=l.de;
+    if(blankMap[i]!==undefined){
+      const b=d.blanks[blankMap[i]];
+      de=de.replace(b.word,`<span class="blank" contenteditable="true" id="bl-${blankMap[i]}" data-ans="${b.word}" spellcheck="false"></span>`);
+    }
+    html+=`<div class="line"><span class="speaker ${l.s.toLowerCase()}">${l.s}</span><div class="bubble"><div class="de">${de}</div><div class="vi">${l.vi}</div></div></div>`;
+  });
+  html+=`</div>`;
+  html+=`<div class="actions">
+    <button class="btn primary" onclick="checkFill()">Kiểm tra</button>
+    <button class="btn" onclick="revealFill()">Xem đáp án</button>
+    <button class="btn" onclick="resetFill()">Làm lại</button>
+  </div>`;
+  html+=`<div class="tip-box"><div class="tip-label">Mẹo văn hóa</div>${d.tip}</div>`;
+  el.innerHTML=html;
+  d.blanks.forEach((_,i)=>{
+    const b=document.getElementById('bl-'+i);
+    if(b) b.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkFill();}});
+  });
+}
+
+function checkFill(){
+  data[sitIdx].blanks.forEach((_,i)=>{
+    const el=document.getElementById('bl-'+i);
+    if(!el)return;
+    const val=el.innerText.trim();
+    el.contentEditable='false';
+    el.className='blank '+(val.toLowerCase()===el.dataset.ans.toLowerCase()?'correct':'wrong');
+  });
+}
+
+function revealFill(){
+  data[sitIdx].blanks.forEach((_,i)=>{
+    const el=document.getElementById('bl-'+i);
+    if(!el)return;
+    el.innerText=el.dataset.ans;
+    el.className='blank revealed';
+    el.contentEditable='false';
+  });
+}
+
+function resetFill(){
+  fillChecked=false;
+  renderFill(document.getElementById('content'));
+}
+
+function renderQuiz(el){
+  const d=data[sitIdx];
+  if(quizDone||quizIdx>=d.quiz.length){
+    el.innerHTML=`<div class="result-card">
+      <div style="font-size:13px;color:#888;margin-bottom:8px">${d.title}</div>
+      <div class="result-num">${quizScore}/${d.quiz.length}</div>
+      <div class="result-pct">${Math.round(quizScore/d.quiz.length*100)}% đúng</div>
+      <button class="btn primary" onclick="quizIdx=0;quizScore=0;quizAnswered=false;quizDone=false;render();">Làm lại</button>
+    </div>`;
+    return;
+  }
+  const q=d.quiz[quizIdx];
+  let html=`<div class="score-bar">
+    <div class="score-pill">Câu <span>${quizIdx+1}/${d.quiz.length}</span></div>
+    <div class="score-pill">Điểm <span>${quizScore}</span></div>
+  </div>
+  <div class="quiz-card">
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-ctx">${q.ctx}</div>
+    <div class="quiz-opts">`;
+  q.opts.forEach((o,i)=>{
+    html+=`<button class="qopt" id="qo-${i}" onclick="answerQuiz(${i})">${o}</button>`;
+  });
+  html+=`</div><div class="qfb" id="qfb"></div><div id="qnext"></div></div>`;
+  el.innerHTML=html;
+}
+
+function answerQuiz(choice){
+  if(quizAnswered)return;
+  quizAnswered=true;
+  const q=data[sitIdx].quiz[quizIdx];
+  q.opts.forEach((_,i)=>{
+    const b=document.getElementById('qo-'+i);
+    b.disabled=true;
+    if(i===q.ans) b.classList.add('reveal');
+  });
+  const fb=document.getElementById('qfb');
+  const nxt=document.getElementById('qnext');
+  if(choice===q.ans){
+    document.getElementById('qo-'+choice).classList.remove('reveal');
+    document.getElementById('qo-'+choice).classList.add('correct');
+    fb.textContent='Đúng rồi!';fb.style.color='#3B6D11';
+    quizScore++;
+  } else {
+    document.getElementById('qo-'+choice).classList.add('wrong');
+    fb.textContent='Sai. Đáp án đúng được đánh dấu xanh.';fb.style.color='#c0392b';
+  }
+  nxt.innerHTML=`<button class="btn" style="margin-top:10px" onclick="quizIdx++;quizAnswered=false;render();">Tiếp →</button>`;
+}
+
+render();
+</script>
+</body>
+</html>
